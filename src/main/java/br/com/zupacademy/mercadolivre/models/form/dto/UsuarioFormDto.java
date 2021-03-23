@@ -8,25 +8,27 @@ import org.hibernate.validator.constraints.Length;
 import org.mindrot.jbcrypt.BCrypt;
 
 import br.com.zupacademy.mercadolivre.models.Usuario;
+import br.com.zupacademy.mercadolivre.validator.UniqueValue;
 
 public class UsuarioFormDto {
 
 	@NotBlank
 	@Email
-	private String emailLogin;
+	@UniqueValue(campo = "email", classeDominio = Usuario.class)
+	private String email;
 
 	@NotNull
 	@Length(min = 6, message = "A senha deve ter no mínimo 6 caracteres.")
 	private String senha;
 
-	public UsuarioFormDto(@NotBlank @Email String emailLogin,
+	public UsuarioFormDto(@NotBlank @Email String email,
 			@NotNull @Length(min = 6, message = "A senha deve ter no mínimo 6 caracteres.") String senha) {
-		this.emailLogin = emailLogin;
+		this.email = email;
 		this.senha = senha;
 	}
 
 	public Usuario converter() {
-		return new Usuario(emailLogin, senha = gerarSenhaHash(senha));
+		return new Usuario(email, senha = gerarSenhaHash(senha));
 	}
 
 	public String gerarSenhaHash(String senha) {

@@ -10,7 +10,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -23,7 +22,7 @@ public class Usuario {
 
 	@NotBlank
 	@Email
-	private String emailLogin;
+	private String email;
 
 	@NotNull
 	@Length(min = 6)
@@ -33,10 +32,8 @@ public class Usuario {
 	@PastOrPresent
 	private LocalDateTime momentoDoCadastro = LocalDateTime.now();
 
-	public Usuario(@NotBlank @Email String emailLogin,
-			@NotNull @Size(min = 6, message = "A senha precisa ter no mínimo 6 caracteres.") @Length(min = 6) String senha) {
-		super();
-		this.emailLogin = emailLogin;
+	public Usuario(@NotBlank @Email String email, @NotNull @Length(min = 6) String senha) {
+		this.email = email;
 		this.senha = senha;
 	}
 
