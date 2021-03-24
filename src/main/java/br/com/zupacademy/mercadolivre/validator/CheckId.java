@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package br.com.zupacademy.mercadolivre.validator;
 
 import java.lang.annotation.Documented;
@@ -10,12 +13,12 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 @Documented
-@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UniqueValueConstraint.class)
-public @interface UniqueValue {
+@Target(ElementType.FIELD)
+@Constraint(validatedBy = CheckIdConstraint.class)
+public @interface CheckId {
 
-	String message() default "O valor informado já foi cadastrado!";
+	String message() default "Registro não identificado!";
 
 	Class<?>[] groups() default {};
 
@@ -24,5 +27,4 @@ public @interface UniqueValue {
 	String field() default "";
 
 	Class<?> domain();
-
 }

@@ -20,13 +20,13 @@ public class UniqueValueConstraint implements ConstraintValidator<UniqueValue, O
 
 	@Override
 	public void initialize(UniqueValue constraint) {
-		this.campo = constraint.campo();
-		this.classeDominio = constraint.classeDominio();
+		this.campo = constraint.field();
+		this.classeDominio = constraint.domain();
 	}
 
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
-		Query query = em				
+		Query query = em
 				.createQuery(String.format("SELECT 1 FROM %s WHERE %s = :value", classeDominio.getName(), campo))
 				.setParameter("value", value);
 

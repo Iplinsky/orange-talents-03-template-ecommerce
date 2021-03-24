@@ -14,7 +14,7 @@ public class UsuarioFormDto {
 
 	@NotBlank
 	@Email
-	@UniqueValue(campo = "email", classeDominio = Usuario.class)
+	@UniqueValue(field = "email", domain = Usuario.class)
 	private String email;
 
 	@NotNull
