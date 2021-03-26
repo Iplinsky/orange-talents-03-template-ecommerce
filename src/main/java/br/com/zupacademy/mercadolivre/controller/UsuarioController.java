@@ -5,6 +5,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +19,14 @@ import br.com.zupacademy.mercadolivre.models.form.dto.UsuarioFormDto;
 public class UsuarioController {
 
 	@PersistenceContext
-	EntityManager em;
+	private EntityManager entityManager;
 
 	@PostMapping
 	@Transactional
-	public void cadastro(@RequestBody @Valid UsuarioFormDto form) {
-		Usuario usuario = form.converter();
-		em.persist(usuario);
+	public ResponseEntity<?> cadastrar(@RequestBody @Valid UsuarioFormDto usuarioForm) {
+		Usuario usuario = usuarioForm.converter();
+		entityManager.persist(usuario);
+
+		return ResponseEntity.ok().build();
 	}
 }
