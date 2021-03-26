@@ -26,5 +26,4 @@ public class CategoriaFormDto {
 		Categoria categoriaMae = idCategoriaMae != null ? entityManager.find(Categoria.class, idCategoriaMae) : null;
 		return new Categoria(nome, categoriaMae);
 	}
-
 }
