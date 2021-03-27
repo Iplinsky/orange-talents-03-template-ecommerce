@@ -47,8 +47,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 		.antMatchers("/h2-console/**").permitAll()
 		.antMatchers(HttpMethod.POST, "/usuarios").permitAll()		
 		.anyRequest().authenticated()
+//		.anyRequest().permitAll() 
 		.and().cors()
-//		.anyRequest().permitAll()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //		Configuração realizada para acessar o banco de dados em memória H2
