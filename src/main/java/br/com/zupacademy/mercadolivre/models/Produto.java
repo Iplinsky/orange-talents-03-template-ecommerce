@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
@@ -50,11 +51,13 @@ public class Produto {
 	private String descricao;
 
 	@ManyToOne
+	@JoinColumn(name = "categoria_id", nullable = false)
 	@NotNull
 	@Valid
 	private Categoria categoria;
 
 	@ManyToOne
+	@JoinColumn(name = "donoDoProduto_id", nullable = false)
 	@NotNull
 	@Valid
 	private Usuario donoDoProduto;
@@ -63,6 +66,10 @@ public class Produto {
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
 	private Set<Caracteristica> caracteristicas = new HashSet<Caracteristica>();
 
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<Imagem> imagens = new HashSet<Imagem>();
+
+	@SuppressWarnings("unused")
 	private LocalDateTime instanteDoCadastro = LocalDateTime.now();
 
 	@Deprecated
@@ -87,6 +94,21 @@ public class Produto {
 
 	public Long getId() {
 		return this.id;
+	}
+
+	public Usuario getDonoDoProdutO() {
+		return this.donoDoProduto;
+	}
+
+	public void relacionaImagens(Set<String> listaDeLinks) {
+		this.imagens.addAll(listaDeLinks.stream().map(link -> new Imagem(link, this)).collect(Collectors.toSet()));
+	}
+
+	public boolean verificaSeOProdutoPertenceAoUsuario(Usuario donoDoProduto) {
+		if (this.donoDoProduto == donoDoProduto)
+			return true;
+
+		return false;
 	}
 
 	@Override
