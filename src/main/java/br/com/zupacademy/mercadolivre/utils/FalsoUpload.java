@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Primary
-public class UploaderFake {
+public class FalsoUpload {
 
 	public Set<String> envia(List<MultipartFile> listaImagens) {
 		return listaImagens.stream().map(imagem -> "http://bucket.io/" + imagem.getOriginalFilename()).collect(Collectors.toSet());

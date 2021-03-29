@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import br.com.zupacademy.mercadolivre.models.Usuario;
 import br.com.zupacademy.mercadolivre.models.form.dto.ImagemFormDto;
 import br.com.zupacademy.mercadolivre.models.form.dto.ProdutoFormDto;
 import br.com.zupacademy.mercadolivre.repository.UsuarioRepository;
-import br.com.zupacademy.mercadolivre.utils.UploaderFake;
+import br.com.zupacademy.mercadolivre.utils.FalsoUpload;
 import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisValidator;
 
 @RestController
@@ -31,11 +32,11 @@ import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisVa
 public class ProdutoController {
 
 	private UsuarioRepository usuarioRepository;
-	private UploaderFake uploaderFake;
+	private FalsoUpload falsoUpload;
 
-	public ProdutoController(UsuarioRepository usuarioRepository, UploaderFake uploaderFake) {
+	public ProdutoController(UsuarioRepository usuarioRepository, FalsoUpload falsoUpload) {
 		this.usuarioRepository = usuarioRepository;
-		this.uploaderFake = uploaderFake;
+		this.falsoUpload = falsoUpload;
 	}
 
 	@PersistenceContext
@@ -58,15 +59,15 @@ public class ProdutoController {
 	@PostMapping("/{id}/imagens")
 	@Transactional
 	public ResponseEntity<?> adicionaImagemAoProduto(@PathVariable("id") Long codProduto,
-			@Valid ImagemFormDto imagemForm) {
+			@Valid ImagemFormDto imagemForm, @AuthenticationPrincipal Usuario usuarioLogado) {
 		Produto produto = em.find(Produto.class, codProduto);
-		Usuario donoDoProduto = usuarioRepository.findByEmail("thiago@gmail.com").get();
 
-		if (!produto.verificaSeOProdutoPertenceAoUsuario(donoDoProduto)) {
+		if (!produto.verificaSeOProdutoPertenceAoUsuario(usuarioLogado)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 		}
 
-		Set<String> listaDeLinks = uploaderFake.envia(imagemForm.getListaImagens());
+		// Gerando um link fictício
+		Set<String> listaDeLinks = falsoUpload.envia(imagemForm.getListaImagens());
 		produto.relacionaImagens(listaDeLinks);
 		em.merge(produto);
 

@@ -105,7 +105,7 @@ public class Produto {
 	}
 
 	public boolean verificaSeOProdutoPertenceAoUsuario(Usuario donoDoProduto) {
-		if (this.donoDoProduto == donoDoProduto)
+		if (this.donoDoProduto.getId() == donoDoProduto.getId())
 			return true;
 
 		return false;
