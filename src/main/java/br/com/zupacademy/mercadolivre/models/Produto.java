@@ -69,6 +69,9 @@ public class Produto {
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<Imagem> imagens = new HashSet<Imagem>();
 
+	@OneToMany(mappedBy = "produtoOpinado", cascade = CascadeType.MERGE)
+	private Set<Opiniao> listaDeOpinioes = new HashSet<Opiniao>();
+
 	@SuppressWarnings("unused")
 	private LocalDateTime instanteDoCadastro = LocalDateTime.now();
 
@@ -102,6 +105,10 @@ public class Produto {
 
 	public void relacionaImagens(Set<String> listaDeLinks) {
 		this.imagens.addAll(listaDeLinks.stream().map(link -> new Imagem(link, this)).collect(Collectors.toSet()));
+	}
+
+	public void adicionaOpiniao(Opiniao opiniao) {
+		this.listaDeOpinioes.add(opiniao);
 	}
 
 	public boolean verificaSeOProdutoPertenceAoUsuario(Usuario donoDoProduto) {

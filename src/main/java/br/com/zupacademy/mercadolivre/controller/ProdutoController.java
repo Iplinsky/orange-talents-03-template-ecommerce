@@ -23,7 +23,6 @@ import br.com.zupacademy.mercadolivre.models.Produto;
 import br.com.zupacademy.mercadolivre.models.Usuario;
 import br.com.zupacademy.mercadolivre.models.form.dto.ImagemFormDto;
 import br.com.zupacademy.mercadolivre.models.form.dto.ProdutoFormDto;
-import br.com.zupacademy.mercadolivre.repository.UsuarioRepository;
 import br.com.zupacademy.mercadolivre.utils.FalsoUpload;
 import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisValidator;
 
@@ -31,11 +30,9 @@ import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisVa
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-	private UsuarioRepository usuarioRepository;
 	private FalsoUpload falsoUpload;
 
-	public ProdutoController(UsuarioRepository usuarioRepository, FalsoUpload falsoUpload) {
-		this.usuarioRepository = usuarioRepository;
+	public ProdutoController(FalsoUpload falsoUpload) {
 		this.falsoUpload = falsoUpload;
 	}
 
@@ -49,9 +46,9 @@ public class ProdutoController {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<?> cadastro(@RequestBody @Valid ProdutoFormDto form) {
-		Usuario donoDoProduto = usuarioRepository.findByEmail("thiago@gmail.com").get();
-		Produto produto = form.converter(em, donoDoProduto);
+	public ResponseEntity<?> cadastrarProduto(@RequestBody @Valid ProdutoFormDto produtoForm,
+			@AuthenticationPrincipal Usuario usuarioLogado) {
+		Produto produto = produtoForm.converter(em, usuarioLogado);
 		em.persist(produto);
 		return ResponseEntity.ok().build();
 	}
