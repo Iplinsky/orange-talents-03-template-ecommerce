@@ -58,6 +58,11 @@ public class ProdutoController {
 	public ResponseEntity<?> adicionaImagemAoProduto(@PathVariable("id") Long codProduto,
 			@Valid ImagemFormDto imagemForm, @AuthenticationPrincipal Usuario usuarioLogado) {
 		Produto produto = em.find(Produto.class, codProduto);
+		/*
+		 * Caso o Produto não seja localizado será retornado 404 Not Found!
+		 */
+		if (produto.equals(null))
+			return ResponseEntity.notFound().build();
 
 		if (!produto.verificaSeOProdutoPertenceAoUsuario(usuarioLogado)) {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN);

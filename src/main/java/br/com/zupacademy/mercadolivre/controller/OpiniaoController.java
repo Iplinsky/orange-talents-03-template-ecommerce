@@ -29,6 +29,13 @@ public class OpiniaoController {
 			@RequestBody @Valid OpiniaoFormDto opiniaoForm, @AuthenticationPrincipal Usuario usuarioLogado) {
 
 		Produto produto = em.find(Produto.class, codProduto);
+
+		/*
+		 * Caso o Produto não seja localizado será retornado 404 Not Found!
+		 */
+		if (produto.equals(null))
+			return ResponseEntity.notFound().build();
+
 		Opiniao opiniao = opiniaoForm.converter(usuarioLogado, produto);
 
 		produto.adicionaOpiniao(opiniao);

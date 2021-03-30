@@ -72,6 +72,9 @@ public class Produto {
 	@OneToMany(mappedBy = "produtoOpinado", cascade = CascadeType.MERGE)
 	private Set<Opiniao> listaDeOpinioes = new HashSet<Opiniao>();
 
+	@OneToMany(mappedBy = "produtoPergunta", cascade = CascadeType.MERGE)
+	private Set<Pergunta> listaDePergunas = new HashSet<Pergunta>();
+
 	@SuppressWarnings("unused")
 	private LocalDateTime instanteDoCadastro = LocalDateTime.now();
 
@@ -109,6 +112,10 @@ public class Produto {
 
 	public void adicionaOpiniao(Opiniao opiniao) {
 		this.listaDeOpinioes.add(opiniao);
+	}
+
+	public void adicionarPeguntaAoProduto(Pergunta pergunta) {
+		this.listaDePergunas.add(pergunta);
 	}
 
 	public boolean verificaSeOProdutoPertenceAoUsuario(Usuario donoDoProduto) {

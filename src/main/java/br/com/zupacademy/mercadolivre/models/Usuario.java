@@ -3,7 +3,9 @@ package br.com.zupacademy.mercadolivre.models;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,7 +47,10 @@ public class Usuario implements UserDetails {
 	private List<Produto> produtos = new ArrayList<Produto>();
 
 	@OneToMany(mappedBy = "usuarioOpiniao")
-	private List<Opiniao> listaDeOpinioes = new ArrayList<Opiniao>();
+	private Set<Opiniao> listaDeOpinioes = new HashSet<Opiniao>();
+
+	@OneToMany(mappedBy = "usuarioPergunta")
+	private Set<Pergunta> listaDePerguntas = new HashSet<Pergunta>();
 
 	@Deprecated
 	public Usuario() {
