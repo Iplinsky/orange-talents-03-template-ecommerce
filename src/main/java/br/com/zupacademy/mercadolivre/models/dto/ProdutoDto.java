@@ -20,6 +20,7 @@ public class ProdutoDto {
 	private Set<ImagemDto> linkImagens;
 	private SortedSet<String> titulosDePerguntas;
 	private double mediaDeNotas;
+	private int totalDeNotasDoProduto;
 
 	public ProdutoDto(Produto produto) {
 		this.nome = produto.getNome();
@@ -34,12 +35,8 @@ public class ProdutoDto {
 		});
 		this.linkImagens = produto.mappingToImagens(ImagemDto::new);
 		this.titulosDePerguntas = produto.mappingToPerguntas(pergunta -> pergunta.getTitulo());
-		retornaMediaDeNotas(produto);
-	}
-
-	private void retornaMediaDeNotas(Produto produto) {
-		Set<Integer> notas = produto.mappingToOpinioes(opiniao -> opiniao.getNota());
-		this.mediaDeNotas = notas.stream().mapToInt(nota -> nota).average().orElse(0.0);
+		this.mediaDeNotas = produto.mappingToOpinioes(opiniao -> opiniao.getNota()).stream().mapToInt(nota -> nota).average().orElse(0.0);
+		this.totalDeNotasDoProduto = produto.mappingToOpinioes(opiniao -> opiniao.getNota()).size();
 	}
 
 	public String getNome() {
@@ -84,6 +81,10 @@ public class ProdutoDto {
 
 	public double getMediaDeNotas() {
 		return mediaDeNotas;
+	}
+
+	public int getTotalDeNotasDoProduto() {
+		return totalDeNotasDoProduto;
 	}
 
 	public static ProdutoDto converter(Produto produto) {

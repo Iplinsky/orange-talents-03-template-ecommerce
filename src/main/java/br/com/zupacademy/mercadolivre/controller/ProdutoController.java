@@ -34,11 +34,9 @@ import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisVa
 public class ProdutoController {
 
 	private FalsoUpload falsoUpload;
-	private UsuarioRepository usuarioRepository;
 
 	public ProdutoController(FalsoUpload falsoUpload, UsuarioRepository usuarioRepository) {
 		this.falsoUpload = falsoUpload;
-		this.usuarioRepository = usuarioRepository;
 	}
 
 	@PersistenceContext
