@@ -178,10 +178,6 @@ public class Produto {
 		return this.imagens.stream().map(mappingFunction).collect(Collectors.toSet());
 	}
 
-	public <T> Set<T> mappingToOpinioes(Function<Opiniao, T> mappingFunction) {
-		return this.listaDeOpinioes.stream().map(mappingFunction).collect(Collectors.toSet());
-	}
-
 	public <T extends Comparable<T>> SortedSet<T> mappingToPerguntas(Function<Pergunta, T> mappingFunction) {
 		return this.listaDePergunas.stream().map(mappingFunction).collect(Collectors.toCollection(TreeSet::new));
 	}
