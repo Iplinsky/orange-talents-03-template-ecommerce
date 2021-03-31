@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +22,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.zupacademy.mercadolivre.models.Produto;
 import br.com.zupacademy.mercadolivre.models.Usuario;
+import br.com.zupacademy.mercadolivre.models.dto.ProdutoDto;
 import br.com.zupacademy.mercadolivre.models.form.dto.ImagemFormDto;
 import br.com.zupacademy.mercadolivre.models.form.dto.ProdutoFormDto;
+import br.com.zupacademy.mercadolivre.repository.UsuarioRepository;
 import br.com.zupacademy.mercadolivre.utils.FalsoUpload;
 import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisValidator;
 
@@ -31,9 +34,11 @@ import br.com.zupacademy.mercadolivre.validator.restringeCaracteristicasIguaisVa
 public class ProdutoController {
 
 	private FalsoUpload falsoUpload;
+	private UsuarioRepository usuarioRepository;
 
-	public ProdutoController(FalsoUpload falsoUpload) {
+	public ProdutoController(FalsoUpload falsoUpload, UsuarioRepository usuarioRepository) {
 		this.falsoUpload = falsoUpload;
+		this.usuarioRepository = usuarioRepository;
 	}
 
 	@PersistenceContext
@@ -74,6 +79,15 @@ public class ProdutoController {
 		em.merge(produto);
 
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ProdutoDto> listaProdutos(@PathVariable("id") Long codProduto) {
+		Produto produto = em.find(Produto.class, codProduto);
+		if (produto.equals(null))
+			return ResponseEntity.notFound().build();
+
+		return ResponseEntity.ok(ProdutoDto.converter(produto));
 	}
 
 }

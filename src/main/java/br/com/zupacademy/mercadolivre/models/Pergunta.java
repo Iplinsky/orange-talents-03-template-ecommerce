@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
 @Entity
-public class Pergunta {
+public class Pergunta implements Comparable<Pergunta> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,12 +53,17 @@ public class Pergunta {
 		return this.produtoPergunta;
 	}
 
+	public String getTitulo() {
+		return this.titulo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((produtoPergunta == null) ? 0 : produtoPergunta.hashCode());
 		result = prime * result + ((titulo == null) ? 0 : titulo.hashCode());
+		result = prime * result + ((usuarioPergunta == null) ? 0 : usuarioPergunta.hashCode());
 		return result;
 	}
 
@@ -81,7 +86,17 @@ public class Pergunta {
 				return false;
 		} else if (!titulo.equals(other.titulo))
 			return false;
+		if (usuarioPergunta == null) {
+			if (other.usuarioPergunta != null)
+				return false;
+		} else if (!usuarioPergunta.equals(other.usuarioPergunta))
+			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Pergunta o) {
+		return this.titulo.compareTo(o.titulo);
 	}
 
 }

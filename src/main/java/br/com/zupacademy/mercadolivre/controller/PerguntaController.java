@@ -42,7 +42,7 @@ public class PerguntaController {
 		Pergunta pergunta = new Pergunta(perguntaForm.getTitulo(), usuarioLogado, produtoRelacionadoAPergunta);
 
 		produtoRelacionadoAPergunta.adicionarPeguntaAoProduto(pergunta);
-		em.merge(produtoRelacionadoAPergunta);
+		em.persist(produtoRelacionadoAPergunta);
 
 		email.enviaEmailNovaPergunta(pergunta);
 

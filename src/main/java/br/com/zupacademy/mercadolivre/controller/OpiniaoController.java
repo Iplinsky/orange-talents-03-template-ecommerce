@@ -39,7 +39,7 @@ public class OpiniaoController {
 		Opiniao opiniao = opiniaoForm.converter(usuarioLogado, produto);
 
 		produto.adicionaOpiniao(opiniao);
-		em.merge(produto);
+		em.persist(produto);
 
 		return ResponseEntity.ok().build();
 	}

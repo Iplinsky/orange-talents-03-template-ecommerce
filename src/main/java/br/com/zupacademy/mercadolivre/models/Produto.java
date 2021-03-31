@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -15,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -69,11 +73,12 @@ public class Produto {
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
 	private Set<Imagem> imagens = new HashSet<Imagem>();
 
-	@OneToMany(mappedBy = "produtoOpinado", cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "produtoOpinado", cascade = CascadeType.PERSIST)
 	private Set<Opiniao> listaDeOpinioes = new HashSet<Opiniao>();
 
-	@OneToMany(mappedBy = "produtoPergunta", cascade = CascadeType.MERGE)
-	private Set<Pergunta> listaDePergunas = new HashSet<Pergunta>();
+	@OneToMany(mappedBy = "produtoPergunta", cascade = CascadeType.PERSIST)
+	@OrderBy("titulo asc")
+	private SortedSet<Pergunta> listaDePergunas = new TreeSet<Pergunta>();
 
 	@SuppressWarnings("unused")
 	private LocalDateTime instanteDoCadastro = LocalDateTime.now();
@@ -99,11 +104,51 @@ public class Produto {
 	}
 
 	public Long getId() {
-		return this.id;
+		return id;
 	}
 
-	public Usuario getDonoDoProdutO() {
-		return this.donoDoProduto;
+	public String getNome() {
+		return nome;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public Integer getQuantidadeDisponivel() {
+		return quantidadeDisponivel;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public Usuario getDonoDoProduto() {
+		return donoDoProduto;
+	}
+
+	public Set<Caracteristica> getCaracteristicas() {
+		return caracteristicas;
+	}
+
+	public Set<Imagem> getImagens() {
+		return imagens;
+	}
+
+	public Set<Opiniao> getListaDeOpinioes() {
+		return listaDeOpinioes;
+	}
+
+	public Set<Pergunta> getListaDePergunas() {
+		return listaDePergunas;
+	}
+
+	public LocalDateTime getInstanteDoCadastro() {
+		return instanteDoCadastro;
 	}
 
 	public void relacionaImagens(Set<String> listaDeLinks) {
@@ -119,10 +164,26 @@ public class Produto {
 	}
 
 	public boolean verificaSeOProdutoPertenceAoUsuario(Usuario donoDoProduto) {
-		if (this.donoDoProduto.getId() == donoDoProduto.getId())
+		if (this.donoDoProduto.getId() == donoDoProduto.getId()) {
 			return true;
-
+		}
 		return false;
+	}
+
+	public <T> Set<T> mappingToCaracteristicas(Function<Caracteristica, T> mappingFunction) {
+		return this.caracteristicas.stream().map(mappingFunction).collect(Collectors.toSet());
+	}
+
+	public <T> Set<T> mappingToImagens(Function<Imagem, T> mappingFunction) {
+		return this.imagens.stream().map(mappingFunction).collect(Collectors.toSet());
+	}
+
+	public <T> Set<T> mappingToOpinioes(Function<Opiniao, T> mappingFunction) {
+		return this.listaDeOpinioes.stream().map(mappingFunction).collect(Collectors.toSet());
+	}
+
+	public <T extends Comparable<T>> SortedSet<T> mappingToPerguntas(Function<Pergunta, T> mappingFunction) {
+		return this.listaDePergunas.stream().map(mappingFunction).collect(Collectors.toCollection(TreeSet::new));
 	}
 
 	@Override

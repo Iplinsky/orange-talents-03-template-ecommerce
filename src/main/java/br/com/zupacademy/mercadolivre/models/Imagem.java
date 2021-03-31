@@ -39,6 +39,10 @@ public class Imagem {
 		this.produto = produto;
 	}
 
+	public String getLink() {
+		return link;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

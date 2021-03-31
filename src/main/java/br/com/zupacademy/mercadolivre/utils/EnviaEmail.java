@@ -25,7 +25,7 @@ public class EnviaEmail {
 				"Nova pergunta registrada.",
 				pergunta.getUsuarioPergunta().getUsername(),
 				"emailteste@mercadolivre.com",
-				pergunta.getProdutoPergunta().getDonoDoProdutO().getUsername());
+				pergunta.getProdutoPergunta().getDonoDoProduto().getUsername());
 	}
 	
 }

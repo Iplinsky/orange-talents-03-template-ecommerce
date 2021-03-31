@@ -36,4 +36,8 @@ public class Categoria {
 		this.categoriaMae = categoriaMae;
 	}
 
+	public String getNome() {
+		return nome;
+	}
+
 }

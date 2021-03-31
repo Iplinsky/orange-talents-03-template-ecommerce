@@ -58,6 +58,18 @@ public class Opiniao {
 		this.produtoOpinado = produtoOpinado;
 	}
 
+	public Integer getNota() {
+		return nota;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
