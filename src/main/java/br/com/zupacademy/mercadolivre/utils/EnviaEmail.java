@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 
+import br.com.zupacademy.mercadolivre.models.Compra;
 import br.com.zupacademy.mercadolivre.models.Pergunta;
 
 @Service
@@ -27,5 +28,17 @@ public class EnviaEmail {
 				"emailteste@mercadolivre.com",
 				pergunta.getProdutoPergunta().getDonoDoProduto().getUsername());
 	}
+	
+	public void enviaEmailNovaCompra(@NotNull @Valid Compra compra) {
+		mailer.send("<html>"
+						+ "<body>"
+								+ "<strong>Email enviado.</strong>"												
+						+ "</body>"
+				   + "</html>",
+				"Uma nova requisição de compra foi realizada!",
+				compra.getComprador().getUsername(),
+				"emailteste@mercadolivre.com",
+				compra.getProduto().getDonoDoProduto().getUsername());
+		}
 	
 }

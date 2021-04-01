@@ -56,27 +56,34 @@ public class Compra {
 	}
 
 	public Compra(@Positive @NotNull Integer quantidadeDeItens, @NotNull @Valid Produto produto,
-			@NotNull @Valid Usuario comprador, @NotNull BigDecimal valorAtualDoProduto, @NotNull Gateway gateway,
-			@NotNull StatusCompra statusCompra) {
+			@NotNull @Valid Usuario comprador, @NotNull BigDecimal valorAtualDoProduto, @NotNull Gateway gateway) {
 		this.quantidadeDeItens = quantidadeDeItens;
 		this.produto = produto;
 		this.comprador = comprador;
 		this.valorAtualDoProduto = valorAtualDoProduto;
 		this.gateway = gateway;
-		this.statusCompra = statusCompra;
+		this.statusCompra = StatusCompra.INICIADA;
 	}
 
 	public Long getId() {
 		return this.id;
 	}
 
+	public Usuario getComprador() {
+		return comprador;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((comprador == null) ? 0 : comprador.hashCode());
+		result = prime * result + ((getComprador() == null) ? 0 : getComprador().hashCode());
 		result = prime * result + ((gateway == null) ? 0 : gateway.hashCode());
-		result = prime * result + ((produto == null) ? 0 : produto.hashCode());
+		result = prime * result + ((getProduto() == null) ? 0 : getProduto().hashCode());
 		result = prime * result + ((quantidadeDeItens == null) ? 0 : quantidadeDeItens.hashCode());
 		result = prime * result + ((statusCompra == null) ? 0 : statusCompra.hashCode());
 		result = prime * result + ((valorAtualDoProduto == null) ? 0 : valorAtualDoProduto.hashCode());
@@ -92,17 +99,17 @@ public class Compra {
 		if (getClass() != obj.getClass())
 			return false;
 		Compra other = (Compra) obj;
-		if (comprador == null) {
-			if (other.comprador != null)
+		if (getComprador() == null) {
+			if (other.getComprador() != null)
 				return false;
-		} else if (!comprador.equals(other.comprador))
+		} else if (!getComprador().equals(other.getComprador()))
 			return false;
 		if (gateway != other.gateway)
 			return false;
-		if (produto == null) {
-			if (other.produto != null)
+		if (getProduto() == null) {
+			if (other.getProduto() != null)
 				return false;
-		} else if (!produto.equals(other.produto))
+		} else if (!getProduto().equals(other.getProduto()))
 			return false;
 		if (quantidadeDeItens == null) {
 			if (other.quantidadeDeItens != null)

@@ -18,10 +18,17 @@ import br.com.zupacademy.mercadolivre.enumerators.Gateway;
 import br.com.zupacademy.mercadolivre.models.Compra;
 import br.com.zupacademy.mercadolivre.models.Usuario;
 import br.com.zupacademy.mercadolivre.models.form.dto.CompraFormDto;
+import br.com.zupacademy.mercadolivre.utils.EnviaEmail;
 
 @RestController
 @RequestMapping("/compras")
 public class CompraController {
+
+	private EnviaEmail email;
+
+	public CompraController(EnviaEmail email) {
+		this.email = email;
+	}
 
 	@PersistenceContext
 	private EntityManager em;
@@ -33,6 +40,7 @@ public class CompraController {
 
 		Compra compra = compraForm.converter(usuarioComprador, em);
 		em.persist(compra);
+		email.enviaEmailNovaCompra(compra);
 
 		if (compraForm.getGateway().equals(Gateway.PAGSEGURO)) {
 			URI uriRetornoPagSeguro = uriBuilder.path("/retorno-pagseguro/{id}").buildAndExpand(compra.getId()).toUri();

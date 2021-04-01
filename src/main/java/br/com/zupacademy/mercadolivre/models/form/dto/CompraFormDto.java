@@ -9,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import br.com.zupacademy.mercadolivre.enumerators.Gateway;
-import br.com.zupacademy.mercadolivre.enumerators.StatusCompra;
 import br.com.zupacademy.mercadolivre.models.Compra;
 import br.com.zupacademy.mercadolivre.models.Produto;
 import br.com.zupacademy.mercadolivre.models.Usuario;
@@ -43,8 +42,7 @@ public class CompraFormDto {
 	public Compra converter(Usuario usuarioComprador, EntityManager em) {
 		Produto produto = em.find(Produto.class, codProduto);
 		produto.abateEstoqueDoProduto(quantidadeDeItens);
-		return new Compra(this.quantidadeDeItens, produto, usuarioComprador, this.valorAtualDoProduto, this.gateway,
-				StatusCompra.INICIADA);
+		return new Compra(this.quantidadeDeItens, produto, usuarioComprador, this.valorAtualDoProduto, this.gateway);
 	}
 
 	public Integer getQuantidadeDeItens() {
