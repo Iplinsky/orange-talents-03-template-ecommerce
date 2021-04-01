@@ -24,7 +24,7 @@ public @interface CheckId {
 
 	Class<? extends Payload>[] payload() default {};
 
-	String field() default "";
+	String field();
 
 	Class<?> domain();
 }

@@ -1,7 +1,7 @@
 package br.com.zupacademy.mercadolivre.exception.handler;
 
 public class ErroEntradaDeDadosDto {
-	
+
 	private String campo;
 	private String erro;
 

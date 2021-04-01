@@ -2,6 +2,7 @@ package br.com.zupacademy.mercadolivre.models;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,13 +24,12 @@ import javax.persistence.OrderBy;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
-
-import com.sun.istack.NotNull;
 
 import br.com.zupacademy.mercadolivre.models.form.dto.CaracteristicaFormDto;
 
@@ -80,6 +81,9 @@ public class Produto {
 	@OrderBy("titulo asc")
 	private SortedSet<Pergunta> listaDePergunas = new TreeSet<Pergunta>();
 
+	@OneToMany(mappedBy = "produto", fetch = FetchType.LAZY)
+	private List<Compra> compras = new ArrayList<Compra>();
+
 	@SuppressWarnings("unused")
 	private LocalDateTime instanteDoCadastro = LocalDateTime.now();
 
@@ -93,7 +97,7 @@ public class Produto {
 			@Size(min = 3) @Valid List<CaracteristicaFormDto> listaDeCaracteristicas) {
 		this.nome = nome;
 		this.valor = valor;
-		this.quantidadeDisponivel = quantidadeDisponivel;
+		this.setQuantidadeDisponivel(quantidadeDisponivel);
 		this.descricao = descricao;
 		this.categoria = categoria;
 		this.donoDoProduto = donoDoProduto;
@@ -117,6 +121,10 @@ public class Produto {
 
 	public Integer getQuantidadeDisponivel() {
 		return quantidadeDisponivel;
+	}
+
+	public void setQuantidadeDisponivel(Integer quantidadeDisponivel) {
+		this.quantidadeDisponivel = quantidadeDisponivel;
 	}
 
 	public String getDescricao() {
@@ -180,6 +188,15 @@ public class Produto {
 
 	public <T extends Comparable<T>> SortedSet<T> mappingToPerguntas(Function<Pergunta, T> mappingFunction) {
 		return this.listaDePergunas.stream().map(mappingFunction).collect(Collectors.toCollection(TreeSet::new));
+	}
+
+	public void abateEstoqueDoProduto(@Positive @NotNull Integer quantidadeDeItensParaAbater) {
+		Assert.isTrue(quantidadeDeItensParaAbater > 0,
+				"A quantidade de itens para serem abatidos deve ser maior que zero!");
+		Assert.isTrue(this.quantidadeDisponivel > quantidadeDeItensParaAbater, String
+				.format("A quantidade em estoque não é suficiente para atender o pedido do produto: %s", this.nome));
+
+		this.quantidadeDisponivel -= quantidadeDeItensParaAbater;
 	}
 
 	@Override

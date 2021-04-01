@@ -33,4 +33,10 @@ public class ErroEntradaDeDadosHandler {
 		return lista;
 	}
 
+	@ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(IllegalArgumentException.class)
+	public String handler(IllegalArgumentException ex) {
+		return ex.getMessage();
+	}
+
 }

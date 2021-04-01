@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -43,13 +44,16 @@ public class Usuario implements UserDetails {
 	@PastOrPresent
 	private LocalDateTime momentoDoCadastro = LocalDateTime.now();
 
-	@OneToMany(mappedBy = "donoDoProduto")
+	@OneToMany(mappedBy = "comprador", fetch = FetchType.LAZY)
+	private List<Compra> compra = new ArrayList<Compra>();
+
+	@OneToMany(mappedBy = "donoDoProduto", fetch = FetchType.LAZY)
 	private List<Produto> produtos = new ArrayList<Produto>();
 
-	@OneToMany(mappedBy = "usuarioOpiniao")
+	@OneToMany(mappedBy = "usuarioOpiniao", fetch = FetchType.LAZY)
 	private Set<Opiniao> listaDeOpinioes = new HashSet<Opiniao>();
 
-	@OneToMany(mappedBy = "usuarioPergunta")
+	@OneToMany(mappedBy = "usuarioPergunta", fetch = FetchType.LAZY)
 	private Set<Pergunta> listaDePerguntas = new HashSet<Pergunta>();
 
 	@Deprecated
