@@ -193,7 +193,7 @@ public class Produto {
 	public void abateEstoqueDoProduto(@Positive @NotNull Integer quantidadeDeItensParaAbater) {
 		Assert.isTrue(quantidadeDeItensParaAbater > 0,
 				"A quantidade de itens para serem abatidos deve ser maior que zero!");
-		Assert.isTrue(this.quantidadeDisponivel > quantidadeDeItensParaAbater, String
+		Assert.isTrue(this.quantidadeDisponivel >= quantidadeDeItensParaAbater, String
 				.format("A quantidade em estoque não é suficiente para atender o pedido do produto: %s", this.nome));
 
 		this.quantidadeDisponivel -= quantidadeDeItensParaAbater;

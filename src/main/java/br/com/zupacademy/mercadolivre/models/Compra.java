@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 import br.com.zupacademy.mercadolivre.enumerators.Gateway;
 import br.com.zupacademy.mercadolivre.enumerators.StatusCompra;
 
@@ -75,6 +77,10 @@ public class Compra {
 
 	public Produto getProduto() {
 		return produto;
+	}
+
+	public String urlRedirecionamento(UriComponentsBuilder uriBuilder) {
+		return this.gateway.criaUrlRetorno(this, uriBuilder);
 	}
 
 	@Override
