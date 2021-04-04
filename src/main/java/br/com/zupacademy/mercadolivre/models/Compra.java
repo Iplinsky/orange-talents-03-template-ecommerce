@@ -1,7 +1,11 @@
 package br.com.zupacademy.mercadolivre.models;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,14 +14,18 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.util.Assert;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.zupacademy.mercadolivre.enumerators.Gateway;
 import br.com.zupacademy.mercadolivre.enumerators.StatusCompra;
+import br.com.zupacademy.mercadolivre.enumerators.StatusPagamento;
+import br.com.zupacademy.mercadolivre.utils.RecebeGatewayRetornaTransacao;
 
 @Entity
 public class Compra {
@@ -53,6 +61,10 @@ public class Compra {
 	@Enumerated(EnumType.STRING)
 	private StatusCompra statusCompra;
 
+	@Valid
+	@OneToMany(mappedBy = "compra", cascade = CascadeType.MERGE)
+	private Set<Transacao> transacoes = new HashSet<Transacao>();
+
 	@Deprecated
 	public Compra() {
 	}
@@ -79,8 +91,45 @@ public class Compra {
 		return produto;
 	}
 
+	public StatusCompra getStatusCompra() {
+		return statusCompra;
+	}
+
+	public Set<Transacao> getTransacoes() {
+		return transacoes;
+	}
+
+	public Gateway getGateway() {
+		return gateway;
+	}
+
 	public String urlRedirecionamento(UriComponentsBuilder uriBuilder) {
-		return this.gateway.criaUrlRetorno(this, uriBuilder);
+		return this.getGateway().criaUrlRetorno(this, uriBuilder);
+	}
+
+	public void adicionarNaListaDeTransaoes(@Valid RecebeGatewayRetornaTransacao valor) {
+		Transacao transacao = valor.coverteParaTransacao(this);
+		validaTransacao(transacao);
+		this.getTransacoes().add(transacao);
+	}
+
+	private void validaTransacao(Transacao transacao) {
+		Assert.isTrue(!this.getTransacoes().contains(transacao),
+				String.format("O sistema já realizou o processamento da transação: %s", transacao.getIdTransacao()));
+		Assert.isTrue(RetornaListaTransacaoConcluidaComSucesso().size() <= 1,
+				"Só pode haver uma transação concluída com sucesso!");
+		Assert.isTrue(RetornaListaTransacaoConcluidaComSucesso().isEmpty(),
+				"O sistema já processou essa transação e ela foi concluída com sucesso.");
+	}
+
+	private Set<Transacao> RetornaListaTransacaoConcluidaComSucesso() {
+		Set<Transacao> listaTransacaoSucesso = this.getTransacoes().stream()
+				.filter(T -> T.getStatusPagamento().equals(StatusPagamento.SUCESSO)).collect(Collectors.toSet());
+		return listaTransacaoSucesso;
+	}
+
+	public boolean verificaSeATransacaoFoiProcessadaComSucesso() {
+		return !RetornaListaTransacaoConcluidaComSucesso().isEmpty();
 	}
 
 	@Override
@@ -88,10 +137,10 @@ public class Compra {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((getComprador() == null) ? 0 : getComprador().hashCode());
-		result = prime * result + ((gateway == null) ? 0 : gateway.hashCode());
+		result = prime * result + ((getGateway() == null) ? 0 : getGateway().hashCode());
 		result = prime * result + ((getProduto() == null) ? 0 : getProduto().hashCode());
 		result = prime * result + ((quantidadeDeItens == null) ? 0 : quantidadeDeItens.hashCode());
-		result = prime * result + ((statusCompra == null) ? 0 : statusCompra.hashCode());
+		result = prime * result + ((getStatusCompra() == null) ? 0 : getStatusCompra().hashCode());
 		result = prime * result + ((valorAtualDoProduto == null) ? 0 : valorAtualDoProduto.hashCode());
 		return result;
 	}
@@ -110,7 +159,7 @@ public class Compra {
 				return false;
 		} else if (!getComprador().equals(other.getComprador()))
 			return false;
-		if (gateway != other.gateway)
+		if (getGateway() != other.getGateway())
 			return false;
 		if (getProduto() == null) {
 			if (other.getProduto() != null)
@@ -122,7 +171,7 @@ public class Compra {
 				return false;
 		} else if (!quantidadeDeItens.equals(other.quantidadeDeItens))
 			return false;
-		if (statusCompra != other.statusCompra)
+		if (getStatusCompra() != other.getStatusCompra())
 			return false;
 		if (valorAtualDoProduto == null) {
 			if (other.valorAtualDoProduto != null)
@@ -130,6 +179,13 @@ public class Compra {
 		} else if (!valorAtualDoProduto.equals(other.valorAtualDoProduto))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Compra [id=" + id + ", quantidadeDeItens=" + quantidadeDeItens + ", valorAtualDoProduto="
+				+ valorAtualDoProduto + ", gateway=" + getGateway() + ", statusCompra=" + getStatusCompra() + ", "
+				+ produto.toString() + "]";
 	}
 
 }

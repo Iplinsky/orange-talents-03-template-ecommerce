@@ -224,4 +224,9 @@ public class Produto {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "Produto [nome=" + nome + ", valor=" + valor + ", descricao=" + descricao + "]";
+	}
+
 }

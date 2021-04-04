@@ -2,7 +2,6 @@ package br.com.zupacademy.mercadolivre.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,11 +42,11 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/auth/**").permitAll()
-		.antMatchers("/h2-console/**").permitAll()
-		.antMatchers(HttpMethod.POST, "/usuarios").permitAll()		
-		.anyRequest().authenticated()
-//		.anyRequest().permitAll() 
+//		.antMatchers("/auth/**").permitAll()
+//		.antMatchers("/h2-console/**").permitAll()
+//		.antMatchers(HttpMethod.POST, "/usuarios").permitAll()		
+//		.anyRequest().authenticated()
+		.anyRequest().permitAll() 
 		.and().cors()
 		.and().csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
