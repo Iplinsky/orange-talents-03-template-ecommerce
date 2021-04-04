@@ -19,10 +19,11 @@ public class ComunicaComSistemaExternoService {
 		
 		if (compra.verificaSeATransacaoFoiProcessadaComSucesso()) {
 			/*
-			 * Nesse ponto o sistema se comunica com dois sistemas externos, Ranking e Nota Fiscal, ambos implementam
-			 * o método realizarComunicacaoComSistemaExterno através da interface ComunicaComSistemaExterno.
-			 * Portanto eu recebo injetado na classe uma lista do tipo ComunicaComSistemaExterno que monitora as suas implementações
-			 * e através do método abaixo eu passo como argumento o objeto compra para a implementação.
+			 * Nesse ponto o sistema se comunica com dois sistemas externos, Ranking e Nota Fiscal e, para a comunicação ser realizada
+			 * as classes de serviço NotaFiscal e RankingVendedoresimplementam são utilizadas para fazer o redirecionamento usando o método 
+			 * realizarComunicacaoComSistemaExterno provido pela interface ComunicaComSistemaExterno.
+			 * Portanto eu recebo injetado dentro dessa classe uma lista de recurso ComunicaComSistemaExterno que monitora as suas implementações
+			 * e através do método abaixo eu passo como argumento o objeto compra para cada uma das implementações.
 			 * 
 			 */
 			comunicaComSistemaExternos.forEach(implementacao -> implementacao.realizarComunicacaoComSistemaExterno(compra));
