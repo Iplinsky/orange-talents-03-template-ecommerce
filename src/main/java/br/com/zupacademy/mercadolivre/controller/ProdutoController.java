@@ -42,7 +42,7 @@ public class ProdutoController {
 	@PersistenceContext
 	private EntityManager em;
 
-	@InitBinder(value = "ProdutoFormDto")
+	@InitBinder(value = { "ProdutoFormDto" })
 	public void initBinder(WebDataBinder dataBinder) {
 		dataBinder.addValidators(new restringeCaracteristicasIguaisValidator());
 	}

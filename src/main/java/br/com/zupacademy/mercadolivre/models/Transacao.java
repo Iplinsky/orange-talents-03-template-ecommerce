@@ -13,6 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import br.com.zupacademy.mercadolivre.enumerators.StatusPagamento;
 
 @Entity
@@ -30,7 +32,8 @@ public class Transacao {
 
 	@NotNull
 	@PastOrPresent
-	private LocalDateTime instanteDaTransacao;
+	@CreationTimestamp
+	private LocalDateTime instanteDaTransacao = LocalDateTime.now();
 
 	@ManyToOne
 	@JoinColumn(name = "compra_id", nullable = false)
@@ -46,7 +49,6 @@ public class Transacao {
 			@NotNull @Valid Compra compra) {
 		this.idTransacao = idTransacao;
 		this.statusPagamento = statusPagamento;
-		this.instanteDaTransacao = LocalDateTime.now();
 		this.compra = compra;
 	}
 
